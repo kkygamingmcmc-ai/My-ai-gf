@@ -1,15 +1,15 @@
-import os
+    import os
 import google.generativeai as genai
 from telegram.ext import Application, MessageHandler, filters, CommandHandler
 import asyncio
 
 # === CONFIG ===
-GEMINI_API_KEY = os.getenv("AIzaSyDol5W_phl4R9Ev1O_urUbEDkiayWJE0_Y")
-BOT_TOKEN = os.getenv("8577478844:AAGUnopskcC632vLgTXGFjyak96mSdjZ6Ys")
-ADMIN_ID = int(os.getenv("5525184805"))
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+ADMIN_ID = int(os.getenv("ADMIN_ID"))
 
 # --- Setup Gemini ---
-genai.configure(api_key=AIzaSyDol5W_phl4R9Ev1O_urUbEDkiayWJE0_Y)
+genai.configure(api_key=GEMINI_API_KEY)
 model = genai.GenerativeModel("gemini-1.5-flash")
 
 # --- Default Prompt ---
@@ -51,7 +51,7 @@ async def start(update, context):
 # --- Admin-only Prompt Control ---
 async def setprompt(update, context):
     global bot_prompt
-    if update.effective_user.id != 5525184805:
+    if update.effective_user.id != ADMIN_ID:
         return await update.message.reply_text("⛔ You’re not authorized to change the prompt.")
     if len(context.args) == 0:
         return await update.message.reply_text("⚙️ Usage: /setprompt your new prompt here")
@@ -59,13 +59,13 @@ async def setprompt(update, context):
     await update.message.reply_text("✅ Prompt updated successfully!")
 
 async def showprompt(update, context):
-    if update.effective_user.id != 5525184805:
+    if update.effective_user.id != ADMIN_ID:
         return await update.message.reply_text("⛔ You’re not authorized to view this.")
     await update.message.reply_text(f"🧠 Current prompt:\n{bot_prompt}")
 
 # --- Main Bot ---
 async def main():
-    app = Application.builder().token(8577478844:AAGUnopskcC632vLgTXGFjyak96mSdjZ6Ys).build()
+    app = Application.builder().token(BOT_TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("setprompt", setprompt))
     app.add_handler(CommandHandler("showprompt", showprompt))
