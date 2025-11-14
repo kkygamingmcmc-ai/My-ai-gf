@@ -1,4 +1,4 @@
-    import os
+import os
 import google.generativeai as genai
 from telegram.ext import Application, MessageHandler, filters, CommandHandler
 import asyncio
